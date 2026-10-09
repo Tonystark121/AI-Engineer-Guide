@@ -1,0 +1,37 @@
+Products = [
+    {
+        "id": 1,
+        "name": "Wireless Mouse",
+        "price": 599,
+        "category": "Electronics",
+        "in_stock": True
+    },
+    {
+        "id": 2,
+        "name": "Mechanical Keyboard",
+        "price": 2499,
+        "category": "Electronics",
+        "in_stock": True
+    },
+    {
+        "id": 3,
+        "name": "Running Shoes",
+        "price": 1999,
+        "category": "Fashion",
+        "in_stock": False
+    },
+    {
+        "id": 4,
+        "name": "Water Bottle",
+        "price": 399,
+        "category": "Accessories",
+        "in_stock": True
+    },
+    {
+        "id": 5,
+        "name": "Backpack",
+        "price": 1299,
+        "category": "Accessories",
+        "in_stock": True
+    }
+]
