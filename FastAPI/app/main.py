@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from app.configFiles.dummyData import Products
 
 app = FastAPI()
@@ -25,6 +25,14 @@ def get_productDetails(prod_id : int):
     return {
         "error": "related products not found"
     }
+
+# now query params are not fixed it can be of any number so we how to handle that
 @app.get("/greet")
-def greet_user(name:str, age:int):
-    return f"Hello {name}, How are you? Are your age is {age}?"
+def greet_user(request:Request):
+    query_params = dict(request.query_params)
+    print(request, query_params)
+    try:
+        age = int(query_params.get("age"))
+    except ValueError:
+        return {"error": "There is error in query string, Age should be an integer"}
+    return f"Hello {query_params.get("name")} How are you? is your age {query_params.get("age")}"
