@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from FastAPI.testData.dummyData import Products
+from app.configFiles.dummyData import Products
 
 app = FastAPI()
 
@@ -15,6 +15,7 @@ def contact():
 def get_products():
     return Products
 
+# we have two things first Parameters & Query String
 @app.get("/product/{prod_id}")
 def get_productDetails(prod_id : int):
     for i in range(len(Products)):
@@ -24,3 +25,6 @@ def get_productDetails(prod_id : int):
     return {
         "error": "related products not found"
     }
+@app.get("/greet")
+def greet_user(name:str, age:int):
+    return f"Hello {name}, How are you? Are your age is {age}?"

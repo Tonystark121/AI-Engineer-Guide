@@ -30,3 +30,16 @@ app.get('/', (req, res) => {
 
 
 ########### Path & Query Parameters
+params -> we dynamically use it in main function using {} and should present in URL as well.
+Query -> don't need to be added in URL, we just define the same variable name in method and use directly. also it auto handle type error.
+
+Compare to express params: 
+    URL -> @app.get("/product/{prod_id}") while express uses : app.get("/product/:prod_id", (req, res) => {...});
+    use -> get_productDetails(prod_id: int): while in expess: let id = req.params.prod_id as string so we convert it to int first for use
+    params are fixed and mandatory
+
+
+Compare to express Query:
+    URL -> same /greet?name=Rajeev&age=25
+    use -> @app.get("/greet") def greet_user(name: str, age: int): validation handled automatically
+            while in express: app.get("/greet", (req, res) => { const name = req.query.name; const age = Number(req.query.age);} both as string we need to convert the data type.
