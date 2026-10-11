@@ -1,6 +1,7 @@
 from src.task.dtos import TaskSchema
 from sqlalchemy.orm import Session
 from src.task.models import TaskModal
+from fastapi import HTTPException
 
 # create task method
 def createTask(body:TaskSchema, db: Session):
@@ -20,4 +21,14 @@ def getTask(db: Session):
         "Status": 200,
         "message": "Fetched Tasks Successful",
         "tasks": tasks
+    }
+    
+def getTaskWithId(id: int, db:Session):
+    task = db.query(TaskModal).get(id)
+    if not task:
+        return HTTPException(404, "No related task found, please enter a valid id")
+    return {
+        "Status": 200,
+        "message": f"Fetched Tasks with Id : {id}  Successful",
+        "tasks": task
     }
