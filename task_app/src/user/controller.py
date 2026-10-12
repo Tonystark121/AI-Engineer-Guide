@@ -1,12 +1,14 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 
 from src.user.dtos import UserSchema, LoginSchema
 from src.user.models import UserModal
 from pwdlib import PasswordHash
 from src.utils.settings import setting
 import jwt
+from jwt.exceptions import InvalidTokenError
+from datetime import datetime , timedelta
 
 
 password_hash = PasswordHash.recommended()
@@ -76,7 +78,33 @@ def loginUser(body: LoginSchema, db:Session):
     if not verify_password(body.password, check_user.hashpasswd):
         return HTTPException(404, 'incorrect passwd, please enter correct details')
     
-    token = jwt.encode({"id":check_user.id, "username": check_user.username }, setting.SECRET_KEY, setting.ALGORITHM)
+    token = jwt.encode({"id":check_user.id, "username": check_user.username, "exp": datetime.now() + timedelta(minutes=1)}, setting.SECRET_KEY, setting.ALGORITHM)
     
     
     return token
+
+
+def isAuthroized(db:Session, request: Request):
+    token = request.headers.get('authorization')
+    if not token:
+        HTTPException(404, 'no token found, access denied')
+        
+        
+    token = token.split(" ")[-1]
+    
+    try:
+        payload = jwt.decode(token, setting.SECRET_KEY, algorithms=setting.ALGORITHM)
+    except InvalidTokenError:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or expired token"
+        )
+    
+    user_id = payload.get("sub", payload.get("id"))
+    user = db.query(UserModal).filter(UserModal.id == user_id).first()
+    
+    if not user:
+        HTTPException(404, 'no user found, access denied')
+        
+    return user
+    

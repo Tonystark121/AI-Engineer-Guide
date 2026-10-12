@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from src.user.dtos import UserSchema, UserResponseSchema, LoginSchema
 from sqlalchemy.orm import Session
 from src.utils.db import get_db
@@ -14,3 +14,7 @@ def create_new_user(body: UserSchema, db:Session = Depends(get_db)):
 @user_router.post('/login')
 def login_user(body: LoginSchema, db:Session = Depends(get_db)):
     return controller.loginUser(body, db)
+
+@user_router.get('/auth')
+def isAuthenticated(request: Request, db:Session = Depends(get_db)):
+    return controller.isAuthroized(db, request)
