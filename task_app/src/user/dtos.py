@@ -18,3 +18,12 @@ class UserSchema(BaseModel):
         if not value.strip():
             raise ValueError("Name cannot be empty")
         return value.strip()
+    
+    
+class UserResponseSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    username: str
+    phone: str
+    email: EmailStr
