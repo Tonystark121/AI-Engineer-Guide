@@ -2,9 +2,11 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from fastapi import HTTPException
 
-from src.user.dtos import UserSchema
+from src.user.dtos import UserSchema, LoginSchema
 from src.user.models import UserModal
 from pwdlib import PasswordHash
+from src.utils.settings import setting
+import jwt
 
 
 password_hash = PasswordHash.recommended()
@@ -13,6 +15,8 @@ password_hash = PasswordHash.recommended()
 def get_password_hash(password: str) -> str:
     return password_hash.hash(password)
 
+def verify_password(plain_password, hashed_password):
+    return password_hash.verify(plain_password, hashed_password)
 
 def createUser(body: UserSchema, db: Session):
     # Check if username, email, or phone already exists
@@ -63,3 +67,16 @@ def createUser(body: UserSchema, db: Session):
     except Exception:
         db.rollback()
         raise
+    
+def loginUser(body: LoginSchema, db:Session):
+    check_user = db.query(UserModal).filter(UserModal.username == body.username).first()
+    if not check_user: 
+        return HTTPException(404, 'No such user exist, please enter correct details')
+    
+    if not verify_password(body.password, check_user.hashpasswd):
+        return HTTPException(404, 'incorrect passwd, please enter correct details')
+    
+    token = jwt.encode({"id":check_user.id, "username": check_user.username }, setting.SECRET_KEY, setting.ALGORITHM)
+    
+    
+    return token

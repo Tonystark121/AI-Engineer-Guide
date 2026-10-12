@@ -27,3 +27,12 @@ class UserResponseSchema(BaseModel):
     username: str
     phone: str
     email: EmailStr
+    
+    
+class LoginSchema(BaseModel):
+    username: str = Field(
+            min_length=3,
+            max_length=50,
+            pattern=r"^[a-zA-Z0-9]+$"
+        )
+    password: str = Field(min_length=4, max_length=128)
