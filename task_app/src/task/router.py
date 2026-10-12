@@ -16,3 +16,13 @@ def get_all_task(db=Depends(get_db)):
 @task_route.get("/get_task/{id}")
 def get_task_withId(id:int, db=Depends(get_db)):
     return controller.getTaskWithId(id, db)
+
+@task_route.put('/update_task/{id}')
+def update_task_withId(body: TaskSchema, id: int, db=Depends(get_db)):
+    print("I am in controller line 22")
+    return controller.updateTask(body, id, db)
+
+
+@task_route.delete('/delete_task/{id}')
+def update_task_withId(id: int, db=Depends(get_db)):
+    return controller.deleteTask(id, db)

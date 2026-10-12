@@ -32,3 +32,29 @@ def getTaskWithId(id: int, db:Session):
         "message": f"Fetched Tasks with Id : {id}  Successful",
         "tasks": task
     }
+    
+def updateTask(body: TaskSchema, id: int, db:Session):
+    task = db.query(TaskModal).filter(TaskModal.id == id).first()
+    print(body)
+    if not task:
+        return HTTPException(404, "No related task found, please enter a valid id")
+    
+    body = body.model_dump(exclude_unset=True)
+    print("I am in controller line 44")
+    for field, value in body.items():
+        setattr(task, field, value)
+        
+    db.commit()
+    db.refresh(task)
+    
+    return {"status": "200", "message": "Task Updated Successfully", "task": task}
+
+
+def deleteTask(id: int, db=Session):
+    task = db.query(TaskModal).filter(TaskModal.id == id).first()
+    if not task:
+        return HTTPException(404, "No related task found, please enter a valid id")
+    
+    db.delete(task)
+    db.commit()
+    return {"status": "200", "message": "Task Updated Successfully"}
