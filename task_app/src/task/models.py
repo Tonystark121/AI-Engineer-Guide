@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from src.utils.db import Base
 
 class TaskModal(Base):
@@ -7,3 +7,4 @@ class TaskModal(Base):
     title = Column(String(255), nullable=False)
     desc = Column(String(1080), nullable=True)
     is_complete = Column(Boolean, default=False, nullable=False)
+    user_id = Column(Integer, ForeignKey("Users.id", ondelete="CASCADE"))

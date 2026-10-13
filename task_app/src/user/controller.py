@@ -80,7 +80,6 @@ def loginUser(body: LoginSchema, db:Session):
     
     token = jwt.encode({"id":check_user.id, "username": check_user.username, "exp": datetime.now() + timedelta(minutes=1)}, setting.SECRET_KEY, setting.ALGORITHM)
     
-    
     return token
 
 

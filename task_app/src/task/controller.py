@@ -2,12 +2,13 @@ from src.task.dtos import TaskSchema
 from sqlalchemy.orm import Session
 from src.task.models import TaskModal
 from fastapi import HTTPException
+from src.user.models import UserModal
 
 # create task method
-def createTask(body:TaskSchema, db: Session):
+def createTask(body:TaskSchema, db: Session, user: UserModal):
     print(body.model_dump())
     data = body.model_dump()
-    new_Task = TaskModal(title=data['title'], desc = data['desc'], is_complete = data['is_complete'])
+    new_Task = TaskModal(title=data['title'], desc = data['desc'], is_complete = data['is_complete'], user_id = user.id)
     
     db.add(new_Task)
     db.commit()
@@ -15,8 +16,8 @@ def createTask(body:TaskSchema, db: Session):
     return new_Task
 
 
-def getTask(db: Session):
-    tasks =  db.query(TaskModal).all()
+def getTask(db: Session, user:UserModal):
+    tasks =  db.query(TaskModal).filter(TaskModal.user_id == user.id).all()
     print(tasks)
     return tasks
     

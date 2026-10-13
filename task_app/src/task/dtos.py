@@ -10,3 +10,4 @@ class TaskResponseSchema(BaseModel):
     id : int
     title : str
     desc: str
+    user_id: int
