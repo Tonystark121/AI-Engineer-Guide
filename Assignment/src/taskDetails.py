@@ -1,0 +1,2 @@
+taskList = []
+counter = 0
